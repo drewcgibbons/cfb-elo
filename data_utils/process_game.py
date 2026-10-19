@@ -1,7 +1,8 @@
 import json
+import os
 import elo_utils.elo_calculation as elo_calculation
-from team import team
 import team.team as t
+import data_utils.fetch_data as fetch_data
 
 """
 Processes the game data and prints the results.
@@ -29,9 +30,21 @@ def process_game(game_data: dict) -> None:
     elo_calculation.calculate_elo_rating(homeTeam, awayTeam, result)
 
     print(homeTeam)
+    print(f"{homeTeam.name}: {home_points}, {awayTeam.name}: {away_points}")
     print(awayTeam)
+    print("-" * 40)  # Separator for clarity
 
-def process_games(data: str) -> None:
-    games = json.loads(data)
+def process_games(data: list[dict]) -> None:
+    games = fbs_filter(data)
     for game_data in games:
         process_game(game_data)
+
+def fbs_filter(games: list[dict]) -> list:
+    fbs_teams = fetch_data.fetch_data("https://api.collegefootballdata.com/teams/fbs", api_key=os.getenv("API_KEY"))
+    fbs_teams = set(team["school"] for team in fbs_teams)
+    
+    fbs_games = []
+    for game in games:
+        if game.get("homeTeam") in fbs_teams or game.get("awayTeam") in fbs_teams:
+            fbs_games.append(game)
+    return fbs_games

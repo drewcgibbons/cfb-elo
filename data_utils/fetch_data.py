@@ -1,4 +1,4 @@
-import requests
+import json, requests
 
 """
 Fetches data from the specified URL.
@@ -7,18 +7,17 @@ Args:
     url (str): The URL to fetch data from.
 
 Returns:
-    str: The content retrieved from the URL.
+    json: The content retrieved from the URL.
     """
-def fetch_data(url, api_key=None):
+def fetch_data(url : str, api_key : str) -> dict | None: 
+    headers = {}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
     try:
-        headers = {}
-        if api_key:
-            headers["Authorization"] = f"Bearer {api_key}"
-
         response = requests.get(url, headers=headers)
         response.raise_for_status()  # Raise an error for bad responses
-        print(response.text)  # Print the response text for debugging   
-        return response.text
+        print(response.json())  # Print the response JSON for debugging   
+        return response.json()
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while fetching data: {e}")
         return None
