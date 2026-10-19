@@ -11,7 +11,7 @@ def calculate_elo_rating(team1: Team, team2: Team, result: str) -> None:
     if result not in scores:
         raise ValueError('result must be "W", "L", or "D"')
 
-    k_factor = 32
+    k_factor = 100
     expected_team1 = 1 / (1 + 10 ** ((team2.elo_rating - team1.elo_rating) / 400))
     adjustment = k_factor * (scores[result] - expected_team1)
 

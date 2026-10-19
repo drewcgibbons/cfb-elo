@@ -9,9 +9,13 @@ Args:
 Returns:
     str: The content retrieved from the URL.
     """
-def fetch_data(url):
+def fetch_data(url, api_key=None):
     try:
-        response = requests.get(url)
+        headers = {}
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+
+        response = requests.get(url, headers=headers)
         response.raise_for_status()  # Raise an error for bad responses
         print(response.text)  # Print the response text for debugging   
         return response.text

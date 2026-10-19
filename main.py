@@ -1,4 +1,8 @@
-from data_utils.fetch_data import fetch_data
+from data_utils import fetch_data, process_game
+import os
 
 if __name__ == "__main__":
-    fetch_data("https://api.collegefootballdata.com/teams/fbs")
+    api_key = os.getenv("API_KEY")
+    data = fetch_data.fetch_data("https://api.collegefootballdata.com/games?year=2026&week=6&id=401856808", api_key=api_key)
+    if data is not None:
+        process_game.process_games(data)
